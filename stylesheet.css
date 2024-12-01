@@ -1,0 +1,21 @@
+* {
+    box-sizing: border-box;
+    margin: 0px;
+}
+
+.probe, .row, .cell, #galaxy {
+    border: 1px solid black;
+
+}
+
+.probe {
+    height: 7px;
+    width: 7px;
+    border-radius: 90%;
+    background-color: red;
+}
+
+#galaxy { 
+    height: 80vh;
+    margin: 12px;
+}
