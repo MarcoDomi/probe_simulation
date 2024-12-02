@@ -21,9 +21,37 @@ function createGalaxy() {
     }
 }
 
+
+let probe_list = [];
+
+
+function createProbe() {
+    return {
+        resources: 0,
+        checkResources: function () {
+            if (this.resources === 10)
+                return createProbe();
+    
+            return none;
+        }
+    }
+}
+
+
 createGalaxy();
+let galaxyLocations = document.querySelectorAll('.item');
 
-let c = document.querySelectorAll('.item');
+function getRandomLocation() {
+    let locationCount = galaxyDimension * galaxyDimension;
+    return Math.floor(Math.random(locationCount) * locationCount);
+}
 
-let specialDiv = c[4000];
-specialDiv.style.backgroundColor = "red";
+function placeProbe() {
+    let location = getRandomLocation();
+    galaxyLocations[location].style.backgroundColor = 'red'; //change to random color
+}
+
+placeProbe();
+function startSim() {
+
+}
