@@ -3,6 +3,7 @@ const galaxyDimension = 80;
 let galaxy = document.querySelector("div");
 let galaxyResources = []; //list of resources at every location in galaxy
 let probe_list = [];
+createGalaxy();
 
 function createRow() {
     let row = document.createElement("div");
@@ -79,25 +80,22 @@ function scanResources(location) {
 
 
 function initSim() {
-    createGalaxy();
     let location = getRandomLocation();
     let p = createProbe(location);
     probe_list.push(p);
 }
 
 
-function runSim() {
-    createGalaxy();
-    let galaxyLocations = document.querySelectorAll('.item');
+let galaxyLocations = document.querySelectorAll('.item'); //list of all locations in galaxy
 
-    let location = getRandomLocation();
-    let p = createProbe(location);
-    probe_list.push(p); 
-    galaxyLocations[location].style.backgroundColor = p.color;
+function runSim() {
+    initSim();
 
     //INFINITE LOOP{
     let tempProbeList = [];
     probe_list.forEach((p) => {
+        galaxyLocations[p.location].style.backgroundColor = p.color;
+
         let resourcesObtained = scanResources(p.location);
         if (resourcesObtained > 0) {
             p.addResources(resourcesObtained);
@@ -108,7 +106,7 @@ function runSim() {
 
         let new_p = p.duplicateSelf();
         if (new_p != 'none') {
-            tempProbeList.appendChild(new_p);
+            tempProbeList.push(new_p);
         }
         
     });
