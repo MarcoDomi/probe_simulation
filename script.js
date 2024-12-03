@@ -49,16 +49,12 @@ function createProbe(location) {
                 this.resources -= 10;
                 return createProbe(this.location);
             }
-            return none;
+            return 'none';
         }
     }
 
-    probe_list.push(probe); 
-
     return probe;
 }
-
-
 
 
 function getRandomLocation() {
@@ -66,16 +62,58 @@ function getRandomLocation() {
     return Math.floor(Math.random() * locationCount);
 }
 
+function scanResources(location) {
+    let returnResources = 0;
 
-function startSim() {
+    if (galaxyResources[location] > 10) { //if location has more than 10 resources 
+        returnResources = 10;
+        galaxyResources[location] -= 10;
+    }
+    else if (galaxyResources[location] > 0) { //if location has 10 or less resources
+        returnResources = galaxyResources[location];
+        galaxyResources[location] = 0;
+    }
+    
+    return returnResources;
+}
+
+
+function initSim() {
+    createGalaxy();
+    let location = getRandomLocation();
+    let p = createProbe(location);
+    probe_list.push(p);
+}
+
+
+function runSim() {
     createGalaxy();
     let galaxyLocations = document.querySelectorAll('.item');
 
     let location = getRandomLocation();
     let p = createProbe(location);
+    probe_list.push(p); 
     galaxyLocations[location].style.backgroundColor = p.color;
 
+    //INFINITE LOOP{
+    let tempProbeList = [];
+    probe_list.forEach((p) => {
+        let resourcesObtained = scanResources(p.location);
+        if (resourcesObtained > 0) {
+            p.addResources(resourcesObtained);
+        }
+        else {
+            //move probe
+        }
 
+        let new_p = p.duplicateSelf();
+        if (new_p != 'none') {
+            tempProbeList.appendChild(new_p);
+        }
+        
+    });
+    probe_list = probe_list.concat(tempProbeList);
+    //INFINITE LOOP}
 }
 
-startSim()
+runSim()
