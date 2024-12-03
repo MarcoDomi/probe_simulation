@@ -14,7 +14,7 @@ function createRow() {
         item.classList = "item";
         row.appendChild(item);
 
-        galaxyResources.push(Math.floor(Math.random() * 30)); //add a value to galaxyResources corresponding to current galaxy location  
+        galaxyResources.push(Math.floor(Math.random() * 30)); //add a value (0 - 30) to galaxyResources corresponding to current galaxy location  
     }
 
     return row;
@@ -41,6 +41,9 @@ function createProbe(location) {
         color: getRandomColor(),
         location,
         resources: 0,
+        addResources: function (resources) {
+            this.resources += resources
+        },
         duplicateSelf: function () {
             if (this.resources >= 10) {
                 this.resources -= 10;
@@ -56,8 +59,7 @@ function createProbe(location) {
 }
 
 
-createGalaxy();
-let galaxyLocations = document.querySelectorAll('.item');
+
 
 function getRandomLocation() {
     let locationCount = galaxyDimension * galaxyDimension;
@@ -66,10 +68,12 @@ function getRandomLocation() {
 
 
 function startSim() {
-    let location = getRandomLocation();
-    galaxyLocations[location].style.backgroundColor = 'red'; 
+    createGalaxy();
+    let galaxyLocations = document.querySelectorAll('.item');
 
-    p = createProbe(location);
+    let location = getRandomLocation();
+    let p = createProbe(location);
+    galaxyLocations[location].style.backgroundColor = p.color;
 
 
 }
