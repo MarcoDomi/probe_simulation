@@ -78,6 +78,16 @@ function scanResources(location) {
     return returnResources;
 }
 
+function moveProbe(location) {
+    let directions = { right: 1, left: -1, up: -80, down: 80 };
+    let directionKeys = Object.keys(directions);
+    let index;
+    for (let i = 0; i < 4; i++){
+        index = Math.floor(Math.random * directionKeys.length);
+
+    }
+}
+
 
 function initSim() {
     let location = getRandomLocation();
@@ -101,7 +111,11 @@ function runSim() {
             p.addResources(resourcesObtained);
         }
         else {
+            galaxyLocations[p.location].style.backgroundColor = 'white';
             //move probe
+
+
+            galaxyLocations[p.location].style.backgroundColor = p.color;
         }
 
         let new_p = p.duplicateSelf();
