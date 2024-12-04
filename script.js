@@ -5,7 +5,7 @@ let galaxy = document.querySelector("#galaxy");
 let galaxyResources = []; //list of resources at every location in galaxy
 let probe_list = [];
 createGalaxy();
-console.log(galaxyResources);
+
 
 function createRow() {
     let row = document.createElement("div");
@@ -110,10 +110,19 @@ function initSim() {
     probe_list.push(p);
 }
 
+function getitemArray() {
+    let tempArray = Array.from(document.querySelectorAll('.item')); //get nodelist of all locations in galaxy then convert to array
+    let galaxyLocations = [];
 
-let galaxyLocations = document.querySelectorAll('.item'); //list of all locations in galaxy
+    while(tempArray.length){
+        galaxyLocations.push(tempArray.splice(0, galaxyDimension));
+    }
+
+    return galaxyLocations
+}
 
 function runSim() {
+    let galaxyLocations = getitemArray();
     initSim();
 
     //INFINITE LOOP{
@@ -143,5 +152,6 @@ function runSim() {
     //INFINITE LOOP}
 }
 
-//runSim()
+runSim()
+
 
