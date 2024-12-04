@@ -1,5 +1,6 @@
 
 const galaxyDimension = 80;
+const locationCount = galaxyDimension * galaxyDimension; //number of possible locations in galaxy
 let galaxy = document.querySelector("div");
 let galaxyResources = []; //list of resources at every location in galaxy
 let probe_list = [];
@@ -59,7 +60,6 @@ function createProbe(location) {
 
 
 function getRandomLocation() {
-    let locationCount = galaxyDimension * galaxyDimension;
     return Math.floor(Math.random() * locationCount);
 }
 
@@ -82,8 +82,21 @@ function moveProbe(location) {
     let directions = { right: 1, left: -1, up: -80, down: 80 };
     let directionKeys = Object.keys(directions);
     let index;
+    let shiftLocation;
+
     for (let i = 0; i < 4; i++){
-        index = Math.floor(Math.random * directionKeys.length);
+        index = Math.floor(Math.random() * directionKeys.length);
+
+        shiftLocation = location + directions[directionKeys[index]];
+
+        if (shiftLocation >= 0 && shiftLocation <= locationCount) {
+            console.log('success: ', shiftLocation);
+            return shiftLocation;
+        }
+        else {
+            console.log('fail: ', shiftLocation);
+            directionKeys.splice(index, 1);
+        }
 
     }
 }
@@ -102,29 +115,29 @@ function runSim() {
     initSim();
 
     //INFINITE LOOP{
-    let tempProbeList = [];
-    probe_list.forEach((p) => {
-        galaxyLocations[p.location].style.backgroundColor = p.color;
-
-        let resourcesObtained = scanResources(p.location);
-        if (resourcesObtained > 0) {
-            p.addResources(resourcesObtained);
-        }
-        else {
-            galaxyLocations[p.location].style.backgroundColor = 'white';
-            //move probe
-
-
+    for (let i = 0; i < 100; i++) {
+        let tempProbeList = [];
+        probe_list.forEach((p) => {
             galaxyLocations[p.location].style.backgroundColor = p.color;
-        }
 
-        let new_p = p.duplicateSelf();
-        if (new_p != 'none') {
-            tempProbeList.push(new_p);
-        }
-        
-    });
-    probe_list = probe_list.concat(tempProbeList);
+            let resourcesObtained = scanResources(p.location);
+            if (resourcesObtained > 0) {
+                p.addResources(resourcesObtained);
+            }
+            else {
+                galaxyLocations[p.location].style.backgroundColor = 'white';
+                p.location = moveProbe(p.location);
+                galaxyLocations[p.location].style.backgroundColor = p.color;
+            }
+
+            let new_p = p.duplicateSelf();
+            if (new_p != 'none') {
+                tempProbeList.push(new_p);
+            }
+            
+        });
+        probe_list = probe_list.concat(tempProbeList);
+    }
     //INFINITE LOOP}
 }
 
