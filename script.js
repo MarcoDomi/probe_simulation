@@ -40,10 +40,11 @@ function getRandomColor() {
 }
 
 
-function createProbe(location) {
+function createProbe(locationX, locationY) {
     let probe = {
         color: getRandomColor(),
-        location,
+        locationX,
+        locationY,
         resources: 0,
         addResources: function (resources) {
             this.resources += resources
@@ -51,7 +52,7 @@ function createProbe(location) {
         duplicateSelf: function () {
             if (this.resources >= 10) {
                 this.resources -= 10;
-                return createProbe(this.location);
+                return createProbe(this.locationX, this.locationY);
             }
             return 'none';
         }
@@ -62,55 +63,61 @@ function createProbe(location) {
 
 
 function getRandomLocation() {
-    return Math.floor(Math.random() * locationCount);
+    let locationX = Math.floor(Math.random() * galaxyDimension);
+    let locationY = Math.floor(Math.random() * galaxyDimension);
+
+    return (locationX, locationY);
 }
 
-function scanResources(location) {
+function scanResources(x, y) {//UNTESTED
     let returnResources = 0;
 
-    if (galaxyResources[location] > 10) { //if location has more than 10 resources 
+    if (galaxyResources[x][y] > 10) { //if location has more than 10 resources 
         returnResources = 10;
-        galaxyResources[location] -= 10;
+        galaxyResources[x][y] -= 10;
     }
-    else if (galaxyResources[location] > 0) { //if location has 10 or less resources
-        returnResources = galaxyResources[location];
-        galaxyResources[location] = 0;
+    else if (galaxyResources[x][y] > 0) { //if location has 10 or less resources
+        returnResources = galaxyResources[x][y];
+        galaxyResources[x][y] = 0;
     }
     
     return returnResources;
 }
 
-function moveProbe(location) {
-    let directions = { right: 1, left: -1, up: -80, down: 80 };
+function moveProbe(locationX, locationY) {//REDO
+    let directions = { right: 1, left: -1, up: -1, down: 1 };
     let directionKeys = Object.keys(directions);
     let index;
-    let shiftLocation;
 
     for (let i = 0; i < 4; i++){
         index = Math.floor(Math.random() * directionKeys.length);
 
-        shiftLocation = location + directions[directionKeys[index]];
+        if (directionKeys[index] == 'right' || directionKeys[index] == 'left') {
+            locationX = locationX + directions[directionKeys[index]];
+        }
+        else if (directionKeys[index] == 'up' || directionKeys[index] == 'down') {
+            locationY = locationY + directions[directionKeys[index]];
+        }
 
-        if (shiftLocation >= 0 && shiftLocation <= locationCount) {
-            console.log('success: ', shiftLocation);
-            return shiftLocation;
+        if ((locationX >= 0 && locationX < galaxyDimension) && (locationY >= 0 && locationY < galaxyDimension) ) {
+            
+            return (locationX, locationY);
         }
         else {
-            console.log('fail: ', shiftLocation);
+           
             directionKeys.splice(index, 1);
         }
-
     }
 }
 
 
 function initSim() {
-    let location = getRandomLocation();
-    let p = createProbe(location);
+    let locationXY = getRandomLocation();
+    let p = createProbe(locationXY[0], locationXY[1]);
     probe_list.push(p);
 }
 
-function getitemArray() {
+function getLocationArray() {
     let tempArray = Array.from(document.querySelectorAll('.item')); //get nodelist of all locations in galaxy then convert to array
     let galaxyLocations = [];
 
@@ -121,15 +128,15 @@ function getitemArray() {
     return galaxyLocations
 }
 
-function runSim() {
-    let galaxyLocations = getitemArray();
+function runSim() {//REDO
+    let galaxyLocations = getLocationArray();
     initSim();
 
     //INFINITE LOOP{
-    for (let i = 0; i < 100; i++) {
-        let tempProbeList = [];
+    for (let i = 0; i < 100; i++) { //100 is arbitrary will change later
+        let tempProbeList = []; //used to add new probes to global probe list
         probe_list.forEach((p) => {
-            galaxyLocations[p.location].style.backgroundColor = p.color;
+            galaxyLocations[p.locationX][p.locationY].style.backgroundColor = p.color;
 
             let resourcesObtained = scanResources(p.location);
             if (resourcesObtained > 0) {
