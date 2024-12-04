@@ -1,24 +1,26 @@
 
 const galaxyDimension = 80;
 const locationCount = galaxyDimension * galaxyDimension; //number of possible locations in galaxy
-let galaxy = document.querySelector("div");
+let galaxy = document.querySelector("#galaxy");
 let galaxyResources = []; //list of resources at every location in galaxy
 let probe_list = [];
 createGalaxy();
+console.log(galaxyResources);
 
 function createRow() {
     let row = document.createElement("div");
     row.classList = "row";
-
+    let tempArr = [];
     //create galaxy location divs with class item
     for (let i = 0; i < galaxyDimension; i++){
         let item = document.createElement("div");
         item.classList = "item";
         row.appendChild(item);
 
-        galaxyResources.push(Math.floor(Math.random() * 30)); //add a value (0 - 30) to galaxyResources corresponding to current galaxy location  
+        tempArr.push(Math.floor(Math.random() * 30)); //add a value (0 - 30) to galaxyResources corresponding to current galaxy location  
     }
 
+    galaxyResources.push(tempArr);
     return row;
 }
 
@@ -141,4 +143,5 @@ function runSim() {
     //INFINITE LOOP}
 }
 
-runSim()
+//runSim()
+
