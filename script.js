@@ -66,7 +66,7 @@ function getRandomLocation() {
     let locationX = Math.floor(Math.random() * galaxyDimension);
     let locationY = Math.floor(Math.random() * galaxyDimension);
 
-    return (locationX, locationY);
+    return [locationX, locationY];
 }
 
 function scanResources(x, y) {//UNTESTED
@@ -101,7 +101,7 @@ function moveProbe(locationX, locationY) {//REDO
 
         if ((locationX >= 0 && locationX < galaxyDimension) && (locationY >= 0 && locationY < galaxyDimension) ) {
             
-            return (locationX, locationY);
+            return [locationX, locationY];
         }
         else {
            
@@ -133,19 +133,21 @@ function runSim() {//REDO
     initSim();
 
     //INFINITE LOOP{
-    for (let i = 0; i < 100; i++) { //100 is arbitrary will change later
+    for (let i = 0; i < 150; i++) { //100 is arbitrary will change later
         let tempProbeList = []; //used to add new probes to global probe list
         probe_list.forEach((p) => {
             galaxyLocations[p.locationX][p.locationY].style.backgroundColor = p.color;
 
-            let resourcesObtained = scanResources(p.location);
+            let resourcesObtained = scanResources(p.locationX, p.locationY);
             if (resourcesObtained > 0) {
                 p.addResources(resourcesObtained);
             }
             else {
-                galaxyLocations[p.location].style.backgroundColor = 'white';
-                p.location = moveProbe(p.location);
-                galaxyLocations[p.location].style.backgroundColor = p.color;
+                galaxyLocations[p.locationX][p.locationY].style.backgroundColor = 'white';
+                let newLocation = moveProbe(p.locationX, p.locationY);
+                p.locationX = newLocation[0];
+                p.locationY = newLocation[1];
+                galaxyLocations[p.locationX][p.locationY].style.backgroundColor = p.color;
             }
 
             let new_p = p.duplicateSelf();
@@ -160,5 +162,6 @@ function runSim() {//REDO
 }
 
 runSim()
+console.log(probe_list.length)
 
 
