@@ -62,11 +62,9 @@ function createProbe(locationX, locationY) {
 }
 
 
-function getRandomLocation() {
-    let locationX = Math.floor(Math.random() * galaxyDimension);
-    let locationY = Math.floor(Math.random() * galaxyDimension);
-
-    return [locationX, locationY];
+function getRandomLocation(maxValue) {
+    return Math.floor(Math.random() * maxValue);
+    
 }
 
 function scanResources(x, y) {//UNTESTED
@@ -85,7 +83,13 @@ function scanResources(x, y) {//UNTESTED
 }
 
 function moveProbe(locationX, locationY) {//REDO
-    let directions = { right: 1, left: -1, up: -1, down: 1 };
+    let maxMoveValue = 4; //sets range of possible values for distance traversed by probe
+    let directions = { //remove 0 from possible values by adding 1
+        right: getRandomLocation(maxMoveValue)+1,
+        left: -(getRandomLocation(maxMoveValue)+1),
+        up: -(getRandomLocation(maxMoveValue))+1,
+        down: getRandomLocation(maxMoveValue)+1, 
+    };
     let directionKeys = Object.keys(directions);
     let index;
 
@@ -108,12 +112,15 @@ function moveProbe(locationX, locationY) {//REDO
             directionKeys.splice(index, 1);
         }
     }
+
+    return [0, 0]
 }
 
 
 function initSim() {
-    let locationXY = getRandomLocation();
-    let p = createProbe(locationXY[0], locationXY[1]);
+    let locationX = getRandomLocation(galaxyDimension);
+    let locationY = getRandomLocation(galaxyDimension);
+    let p = createProbe(locationX, locationY);
     probe_list.push(p);
 }
 
@@ -133,7 +140,7 @@ function runSim() {//REDO
     initSim();
 
     //INFINITE LOOP{
-    for (let i = 0; i < 150; i++) { //100 is arbitrary will change later
+    for (let i = 0; i < 100; i++) { //100 is arbitrary will change later
         let tempProbeList = []; //used to add new probes to global probe list
         probe_list.forEach((p) => {
             galaxyLocations[p.locationX][p.locationY].style.backgroundColor = p.color;
