@@ -3,10 +3,14 @@
     margin: 0px;
 }
 
-.item, #galaxy {
-    border: solid rgb(159, 159, 159);
-    border-width: thin;
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
+.item{
+    border-radius: 50%;
 }
 
 .probe {
@@ -19,7 +23,7 @@
     margin: 12px;
     display: flex;
     flex-direction: column;
-    
+    border: solid rgb(159, 159, 159);
 }
 
 .row {
